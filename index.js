@@ -7,7 +7,7 @@ const app = express();
 app.use(express.json());
 
 app.use('/',userRouter);
-app.use('/basicAuth',authRouter);
+app.use('/auth',authRouter);
 
 app.listen(3000,()=>{
     console.log("App is live at http://localhost:3000");
