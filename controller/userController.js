@@ -84,13 +84,25 @@ const loginUser = async (req, res) => {
             username: username,
         };
         
-        const token = jwt.sign(payload, "this is the secret. Keep it in env", {
-            expiresIn: "2h",
+        const accessToken = jwt.sign(payload, "this is the secret. Keep it in env", {
+            expiresIn: "15m",
         });
+
+        const refreshToken = jwt.sign(payload,"this is the secret. Keep it in env",{
+            expiresIn:"7d"
+        })
+
+        // generally store in db
+        res.cookie("refreshToken",refreshToken,{
+            httpOnly:true,
+            secure:true,
+            sameSite:"Strict",
+            maxAge:7*24*60*60*1000
+        })
         
         return res.status(200).json({
             success: true,
-            token,
+            accessToken,
             username,
             message: "Logged in successfully",
         });

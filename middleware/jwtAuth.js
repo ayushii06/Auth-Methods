@@ -31,4 +31,24 @@ const jwtAuth = async(req,res,next) => {
     }
 }
 
-export {jwtAuth};
+const refreshAuth = async(req,res) => {
+    try {
+        const token = req.cookies.refreshToken;
+
+        if(!token){
+            return res.status(401).json({
+                message:"You are not authorised!"
+            });
+        }
+
+        const user = jwt.verify(token,"this is the secret. Keep it in env");
+
+        const newToken = jwt.sign({username:user.username},"this is the secret. Keep it in env",{expiresIn:"15m"});
+
+        res.json({accessToken:newToken});
+    } catch (error) {
+        return res.sendStatus(403);
+    }
+};
+
+export {jwtAuth,refreshAuth};
